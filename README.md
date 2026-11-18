@@ -10,7 +10,7 @@ Vite, React 19, TypeScript, CSS Modules, modern-normalize, ESLint, Prettier. Dep
 
 ## Getting started
 
-Requires Node.js 22.12 or newer.
+Requires Node.js 24 (LTS).
 
 ```bash
 npm install
