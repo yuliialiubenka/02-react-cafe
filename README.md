@@ -1,96 +1,57 @@
-# React homework template
+# Sip Happens Café — feedback widget
 
-A minimal template for React homework: [Vite](https://vite.dev/), React 19, TypeScript, CSS Modules,
-[modern-normalize](https://github.com/sindresorhus/modern-normalize), ESLint and Prettier. Deployed
-to [Vercel](https://vercel.com/).
+Homework #1 of the React course: a feedback widget for a café. Visitors rate the service with
+**Good**, **Neutral** or **Bad**, and the app shows the number of votes in each category, the total
+and the percentage of positive feedback.
 
-## Creating a repository by template
+## Tech stack
 
-Click **Use this template** → **Create a new repository**, enter the repository name required by the
-assignment (for example `02-react-cafe`), make sure the repository is public, and click **Create
-repository**. Then clone it and work with it as with any other repository.
+Vite, React 19, TypeScript, CSS Modules, modern-normalize, ESLint, Prettier. Deployed to Vercel.
 
-## Preparing for coding
+## Getting started
 
-1. Install Node.js **22.12 or newer** (LTS). [Download](https://nodejs.org/en/) if needed.
-2. Install dependencies: `npm install`.
-3. Start the dev server: `npm run dev`.
-4. Open [http://localhost:5173](http://localhost:5173). The page reloads automatically after you
-   save changes.
+Requires Node.js 22.12 or newer.
+
+```bash
+npm install
+npm run dev
+```
+
+Then open [http://localhost:5173](http://localhost:5173).
 
 ## Scripts
 
 | Command                | What it does                                 |
 | ---------------------- | -------------------------------------------- |
-| `npm run dev`          | Start the dev server with hot reload         |
+| `npm run dev`          | Start the dev server                         |
 | `npm run build`        | Check types and build the production version |
-| `npm run preview`      | Serve the built `dist/` locally to check it  |
-| `npm run typecheck`    | Check TypeScript types only                  |
+| `npm run preview`      | Serve the built `dist/` locally              |
 | `npm run lint`         | Check code with ESLint                       |
 | `npm run format`       | Format all files with Prettier               |
 | `npm run format:check` | Check formatting without changing files      |
 
-Before submitting, run `npm run format`, `npm run lint` and `npm run build` — all three must pass
-without errors, and the browser console must have no errors or warnings.
-
 ## Project structure
 
 ```
-public/                       static files copied to dist/ as is (favicon, manifest)
 src/
-    main.tsx                  entry point: global styles and <App />
-    index.css                 global styles
+    main.tsx                    entry point
+    index.css                   global styles
+    types/
+        votes.ts                shared types: Votes, VoteType
     components/
-        App/
-            App.tsx           root component
-            App.module.css
-        Hero/
-            Hero.tsx          sample component
-            Hero.module.css
-    types/                    types shared by several components (e.g. votes.ts)
-index.html                    HTML page, Vite injects the app here
-vite.config.ts                Vite config: React plugin, `@` alias for src
-tsconfig.json                 TypeScript config (tsconfig.app.json for src, tsconfig.node.json for vite.config.ts)
-eslint.config.js              ESLint rules
-.prettierrc.json              Prettier rules (4-space indent)
+        App/                    owns the votes state, computes totals, renders the rest
+        CafeInfo/               café name and description
+        VoteOptions/            Good / Neutral / Bad buttons and Reset
+        VoteStats/              vote counts, total and positive rate
+        Notification/           "No feedback yet" message
 ```
 
-## Component rules
+Each component folder has a `.tsx` file and a `.module.css` file with the same name.
 
-`src/components/Hero` is a sample to copy:
+## How it works
 
-- every component has its own folder in `src/components`; the folder, the component file (`.tsx`)
-  and the styles file (`.module.css`) have the same name: `Hero/Hero.tsx`, `Hero/Hero.module.css`;
-- components are exported with `export default`;
-- props are typed with an `interface` declared in the component file (`HeroProps`);
-- types used by several components go to `src/types/`, e.g. `src/types/votes.ts`;
-- styles are imported as a module and applied by class name:
-
-```tsx
-import css from './Hero.module.css';
-
-<h1 className={accent ? `${css.title} ${css.accent}` : css.title}>{title}</h1>;
-```
-
-- no inline `style={{…}}` in components.
-
-Imports from `src` can use the `@` alias, e.g. `import type { Votes } from '@/types/votes';`.
-
-## Deploy to Vercel
-
-1. Sign in to [vercel.com](https://vercel.com/) with GitHub.
-2. Click **Add New…** → **Project** and import your repository.
-3. Vercel detects Vite automatically (build command `npm run build`, output `dist`) — click
-   **Deploy**.
-
-After that, every push to `main` is deployed automatically, and the live link is shown in the
-project dashboard. If the build fails, open the deployment and check its **Build Logs**.
-
-### Routing
-
-If you later use `react-router`, add a `vercel.json` to the project root so direct links to nested
-routes open the app instead of a 404:
-
-```json
-{ "rewrites": [{ "source": "/(.*)", "destination": "/" }] }
-```
+- `App` keeps the votes in state (`{ good, neutral, bad }`) and passes `handleVote` and `resetVotes`
+  to `VoteOptions` as callbacks.
+- `totalVotes` and `positiveRate` are computed from the state on every render, not stored.
+- Until the first vote, `Notification` is shown instead of `VoteStats`, and the **Reset** button is
+  hidden.
